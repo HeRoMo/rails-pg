@@ -10,11 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_24_081921) do
+ActiveRecord::Schema.define(version: 2019_02_24_092103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "members", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "メンバー", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "members_tasks", id: false, comment: "タスクとメンバーの関連テーブル", force: :cascade do |t|
+    t.uuid "member_id"
+    t.uuid "task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_id"], name: "index_members_tasks_on_member_id"
+    t.index ["task_id"], name: "index_members_tasks_on_task_id"
+  end
 
   create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, comment: "プロジェクト", force: :cascade do |t|
     t.string "name", null: false, comment: "プロジェクト名"
@@ -29,7 +45,7 @@ ActiveRecord::Schema.define(version: 2019_02_24_081921) do
     t.uuid "project_id"
     t.string "name", null: false
     t.text "description", comment: "概要"
-    t.integer "status", comment: "ステータス"
+    t.integer "status", default: 0, comment: "ステータス"
     t.date "start_on", comment: "開始日"
     t.date "end_on", comment: "終了日"
     t.datetime "created_at", null: false
@@ -37,5 +53,7 @@ ActiveRecord::Schema.define(version: 2019_02_24_081921) do
     t.index ["project_id"], name: "index_tasks_on_project_id"
   end
 
+  add_foreign_key "members_tasks", "members"
+  add_foreign_key "members_tasks", "tasks"
   add_foreign_key "tasks", "projects"
 end
