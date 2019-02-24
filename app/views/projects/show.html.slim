@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @project.name
+p
+  strong Description:
+  = @project.description
+p
+  strong Start on:
+  = @project.start_on
+p
+  strong End on:
+  = @project.end_on
+
+=> link_to 'Edit', edit_project_path(@project)
+'|
+=< link_to 'Back', projects_path
