@@ -1,0 +1,24 @@
+p#notice = notice
+
+p
+  strong Project:
+  = @task.project_id
+p
+  strong Name:
+  = @task.name
+p
+  strong Description:
+  = @task.description
+p
+  strong Status:
+  = @task.status
+p
+  strong Start on:
+  = @task.start_on
+p
+  strong End on:
+  = @task.end_on
+
+=> link_to 'Edit', edit_project_task_path(@project, @task)
+'|
+=< link_to 'Back', project_tasks_path
